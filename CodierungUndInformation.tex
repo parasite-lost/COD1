@@ -1,0 +1,76 @@
+\documentclass[a4paper]{scrartcl}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{tikz}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[colorlinks=true,linkcolor=black,a4paper=true]{hyperref}
+\usetikzlibrary{calc}
+\usetikzlibrary{matrix}
+\usetikzlibrary{automata}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{positioning}
+\usepackage{dsfont}
+\usepackage{tocloft}
+\usepackage{amsmath, amsthm, amssymb}
+
+\title{\rmfamily\Huge Information und Codierung\\[1cm]}
+\subtitle{\rmfamily Vorlesungsmitschrift, Wintersemester 2009\\FAU Erlangen-Nürnberg\\[2cm]}
+
+\author{Prof. Dr. Volker Strehl\\Christoph Rauch (Mitschrift)\\Ulrich Dorsch (\LaTeX)\\[2cm]}
+
+%%%%%%%%%%%%%%%%%%%%%%%%% LAYOUT %%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+% Different format for headings
+\def\section{\@startsection{section}{1}%
+  \z@{.7\baselineskip\@plus\baselineskip}{.5\baselineskip}%
+  {\large\scshape\centering}}
+% This does spacing around caption.
+\setlength{\abovecaptionskip}{0.5em}
+\setlength{\belowcaptionskip}{0.5em}
+% This does justification (left) of caption.
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#2}%
+  \ifdim \wd\@tempboxa >\hsize
+    #2\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\box\@tempboxa\hfill}%
+  \fi
+  \vskip\belowcaptionskip}
+\makeatother
+
+\renewcommand\contentsname{Inhalt}
+\renewcommand\cfttoctitlefont{\hfill\rmfamily\scshape\Large}
+\renewcommand\cftaftertoctitle{\hfill\hfill}
+\renewcommand\cftsecfont{\rmfamily\scshape}
+\renewcommand\cftsecleader{\cftdotfill{2}}
+\renewcommand\cftsecpagefont{\rmfamily}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Satz}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Korollar}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{exmp}{Beispiel}[section]
+
+%%%%%%%%%%%%%%%%%%%%%%%% COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+
+\section{Grundlagen}
+
+\begin{exmp}
+	
+\end{exmp}
+\end{document}
