@@ -1,12 +1,14 @@
 \documentclass[a4paper]{scrartcl}
 \pagestyle{empty}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
 \usepackage{a4wide}
-\usepackage{tikz}
 \usepackage{enumerate}
 \usepackage{listings}
 \usepackage{color}
-\usepackage[colorlinks=true,linkcolor=black,a4paper=true]{hyperref}
+
+\usepackage{tikz}
 \usetikzlibrary{calc}
 \usetikzlibrary{matrix}
 \usetikzlibrary{automata}
@@ -15,6 +17,9 @@
 \usepackage{dsfont}
 \usepackage{tocloft}
 \usepackage{amsmath, amsthm, amssymb}
+\usepackage{xspace}
+
+\usepackage[colorlinks=true,linkcolor=black,a4paper=true]{hyperref}
 
 \title{\rmfamily\Huge Information und Codierung\\[1cm]}
 \subtitle{\rmfamily Vorlesungsmitschrift, Wintersemester 2009\\FAU Erlangen-Nürnberg\\[2cm]}
@@ -51,26 +56,125 @@
 \renewcommand\cftsecpagefont{\rmfamily}
 
 \theoremstyle{plain}
-\newtheorem{thm}{Satz}[section]
-\newtheorem{lem}[thm]{Lemma}
-\newtheorem{cor}[thm]{Korollar}
+\newtheorem{theorem}{Satz}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Korollar}
 
 \theoremstyle{definition}
-\newtheorem{defn}{Definition}[section]
-\newtheorem{exmp}{Beispiel}[section]
+\newtheorem{definition}{Definition}[section]
+
+\newtheoremstyle{examplestyle}
+  {\topsep}   % ABOVESPACE
+  {\topsep}   % BELOWSPACE
+  {\normalfont}  % BODYFONT
+  {0pt}       % INDENT (empty value is the same as 0pt)
+  {\bfseries} % HEADFONT
+  {.\hfill}         % HEADPUNCT
+  {\newline} %5pt plus 1pt minus 1pt} % HEADSPACE
+  {}          % CUSTOM-HEAD-SPEC
+
+\theoremstyle{examplestyle}
+\newtheorem{example}{Beispiel}[section]
 
 %%%%%%%%%%%%%%%%%%%%%%%% COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand\WK{Wahrscheinlichkeit\xspace}
+\newcommand\WV{Wahrscheinlichkeitsverteilung\xspace}
+\newcommand\ZV{Zufallsvariable\xspace}
 
 %%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
 \newpage
 \tableofcontents
+\newpage
 
 \section{Grundlagen}
 
-\begin{exmp}
-	
-\end{exmp}
+\begin{example}[Optimale Wetten bei Pferderennen ({\scshape Kelly}-gambling)]
+	\begin{itemize}
+		\item Pferde $1, 2, \ldots, m$
+		\item \WV $\mathbf p = \left(p_1, p_2, \ldots, p_m\right)$, $p_i$ ist die \WK dass Pferd $i$ gewinnt.
+		\item Auszahlung (``payoff'') $\mathbf a = \left(a_1, a_2, \ldots, a_m\right)$, $a_i$ Gewinn, falls Pferd $i$ gewinnt.
+		\item das Protfolio $\mathbf b = \left(b_1, b_2, \ldots, b_m\right)$ ist eine \WV, wobei $b_i$ der Anteil des Gesamteinsatzes ist, der auf Pferd $i$ gesetzt wird.
+	\end{itemize}
+	Was ist das optimale $\mathbf b$? Was hat das mit Entropie zu tun?
+\end{example}
+
+\begin{definition}
+	Fünf wichtige numerische Größen der Informationstheorie:
+	\begin{enumerate}
+	  \item Entropie $H$ für \WV $\mathbf p = \left( p_1, \dots, p_m \right)$:
+		\[ H\left( \mathbf p \right) = -\sum_{i=1}^{m} p_i\log p_i \]
+	  \item Gegenseitige Information $I$ zweier {\ZV}n $X,Y$ mit Werten in $\left\{ 1, \dots, n \right\}$,
+		gemeinsamer Verteilung $p_{X,Y}\left( i,j \right) = P\left( X=i,Y=j \right)$ sowie Randverteilung $p_X\left( i \right) = \sum\limits_{j=1}^n p_{X,Y}\left( i, j \right)$
+		und $p_Y\left( j \right) = \sum\limits_{i=1}^n p_{X,Y}\left( i, j \right)$:
+		\begin{align*}
+		I\left( X, Y \right) & = H\left( X \right) + H\left( Y \right) - H\left( X,Y \right) \\
+	  		& = \sum_{i,j}p_{X,Y}\left( i,j \right)\log \frac{p_{X,Y}\left( i,j \right)}{p_X\left( i \right)p_Y\left( j \right)} \\
+		  	& = \sum_{i,j}p_{X,Y}\left( i,j \right)\log \frac{P\left( Y=j \mid X=i \right)}{p_Y\left( j \right)} \\
+		\end{align*}
+		$P\left( Y=j \mid X=i \right)$ ist die bedingte \WK des Ereignisses $Y=j$ wenn $X=i$ gilt, und kann in diesem informationstheoretischen Kontext als die \WK angesehen werden
+		dass unter der Bedingung, dass Zeichen $i$ \"uber einen verrauschten Kanal gesendet wird, das Zeichen $j$ empfangen wird.
+	  \item Kapzit\"at $C$ eines Kanals:
+		\[ C = \max_{p_{X}} I\left( X,Y \right) \]
+	  \item relative Entropie $D$ ({\scshape Kullback-Leibler}-Distanz) f\"ur zwei {\WV}en $\mathbf p = \left( p_1, \dots,p_n \right)$, $\mathbf q = \left( q_1, \dots,q_m \right)$:
+		\[ D\left( p || q \right) = \sum_{1 \leq i \leq m} p_i \log \frac{p_i}{q_i} \geq 0 \; \left( = 0 \Leftrightarrow p=q \right)\]
+		$I\left( X,Y \right)$ ist die relative Entropie zwischen gemeinsamer Verteilung $p_{X,Y}$ und Produktverteilung $p_Xp_Y$.
+	  \item Verdopplungsrate $W$ von \WV $\mathbf p = \left( p_1, \dots,p_m \right)$:
+		\[ W = \max_{\mathbf b} \sum_{i=1}^m p_i \log\left( b_i a_i \right) \overset{!}{=} \sum_{i=1}^m p_i \log a_i - H\left( \mathbf p \right) \]
+	\end{enumerate}
+\end{definition}
+
+\begin{example}[Pferderennen (cont'd)]
+  Sei $X$ eine \ZV mit \WK $p_i$ f\"ur das Ereignis $\left[ X = i \right]$.
+  Seien $X_1,\dots,X_n$ unabh\"angige \ZV mit der gleichen \WV wie $X$. Sei $k^{\left( 0 \right)}$ das Kapital vor der ersten Runde des Pferderennens.
+  \begin{itemize}
+	\item Kapital nach einem Rennen: $k^{\left( 1 \right)} = \underbrace{b\left( X_1 \right) \cdot a\left( X_1 \right)}_{s\left( X_1 \right)}\cdot{k^{\left( 0 \right)}}$
+	\item Kapital nach $n$ Rennen: $k^{\left( n \right)} = k^{\left( 0 \right)} \cdot \displaystyle{\prod_{j=1}^n} s\left( X_j \right) $
+  \end{itemize}
+  Das Ziel ist es das Portfolio $\mathbf b$ so zu w\"ahlen, dass der Erwartungswert $E\left[ k^{\left( n \right)} \right]$ maximal wird, dabei bezeichnet $S_n$ den Faktor der
+  Vervielfachung des Einsatzkapitals:
+  \[ \frac{1}{n} \log S_n = \frac{1}{n}\sum_{j=1}^n\log s\left( X_j \right) \underset{n \rightarrow \infty}\rightarrow
+		E_\mathbf{p}\left[ \log S\left( X \right) \right] \quad \left( = W\left( \mathbf b, \mathbf p \right) \right)\]
+	\[ \Rightarrow S_n \approx 2^{n W\left( \mathbf b, \mathbf p \right)} \]
+	Eine Verdopplung des Einsatzkapitals erh\"alt man also wenn:
+	\[ S_n \approx 2 \Rightarrow n = \frac{1}{W\left( \mathbf b, \mathbf p \right)} \]
+	mit
+	\[ W\left( \mathbf b, \mathbf p \right) = \sum_{i=1}^n p_i\log\left( b_i\cdot a_i \right) \]
+	Die optimale Strategie $\mathbf b$ erh\"alt man durch die Maximierung:
+	\[ W^\ast \left( \mathbf p \right) = \max_{\mathbf b} \sum_{i=1}^m p_i \log \left( b_i a_i \right) = \max_{\mathbf b} W\left( \mathbf b, \mathbf p \right) \]
+	mit
+	\[ W\left( \mathbf b, \mathbf p \right) = \sum_{i=1}^m p_i \log\left( b_ia_i \right) = \underbrace{\sum_{i=1}^m\log a_i - H\left( \mathbf p \right)}_{W^\ast\left( \mathbf p \right)}
+	- \underbrace{D\left( \mathbf p\, ||\, \mathbf b \right)}_{\geq 0} \]
+	Das Maximum von $W\left( \mathbf b,\mathbf p \right)$ erhält man also wenn $D\left( \mathbf p\, ||\, \mathbf b \right)$ minimal ist, i.e.\@ $\mathbf p = \mathbf b$.
+\end{example}
+
+\begin{definition}[\textsc{Shannon}-Schema]
+  Nachrichtenübertragung über gestörte Kanäle mittels Blockcodierung:
+
+	\begin{figure}
+	\begin{center}
+	\begin{tikzpicture}
+	\coordinate (q) at (0,4);
+	\coordinate (qc) at (3,4);
+	\coordinate (kc) at (6,4);
+	\coordinate (k) at (9,2);
+	\coordinate (kd) at (6,0);
+	\coordinate (zd) at (3,0);
+	\coordinate (z) at (0,0);
+
+	\node[above] at (q) {Quelle};
+	\node[above] at (qc) {Quellcodierung};
+	\node[above] at (kc) {Kanalcodierung};
+	\node[right] at (k) {Kanal};
+	\node[below] at (kd) {Kanaldecodierung};
+	\node[below] at (zd) {Zieldecodierung};
+	\node[below] at (z) {Ziel};
+
+	\filldraw (q) circle [radius=2pt];
+	\end{tikzpicture}
+	\end{center}
+	\end{figure}
+\end{definition}
 \end{document}
