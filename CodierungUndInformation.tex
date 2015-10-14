@@ -9,6 +9,9 @@
 \usepackage{color}
 
 \usepackage{tikz}
+\usetikzlibrary{shapes.multipart}
+
+
 \usetikzlibrary{calc}
 \usetikzlibrary{matrix}
 \usetikzlibrary{automata}
@@ -81,6 +84,9 @@
 \newcommand\WK{Wahrscheinlichkeit\xspace}
 \newcommand\WV{Wahrscheinlichkeitsverteilung\xspace}
 \newcommand\ZV{Zufallsvariable\xspace}
+\newcommand\coding{\ensuremath{\mathcal C}\xspace}
+\newcommand{\vect}[1]{\ensuremath{\bf #1}\xspace}
+%\DeclareMathOperator\dim{dim}
 
 %%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -150,31 +156,118 @@
 	Das Maximum von $W\left( \mathbf b,\mathbf p \right)$ erhält man also wenn $D\left( \mathbf p\, ||\, \mathbf b \right)$ minimal ist, i.e.\@ $\mathbf p = \mathbf b$.
 \end{example}
 
+\pagebreak
+
 \begin{definition}[\textsc{Shannon}-Schema]
   Nachrichtenübertragung über gestörte Kanäle mittels Blockcodierung:
-
-	\begin{figure}
+  \begin{figure}[h!]
 	\begin{center}
-	\begin{tikzpicture}
+          \begin{tikzpicture}[every text node part/.style={align=center},every
+            node/.style={text width=3cm}]
 	\coordinate (q) at (0,4);
-	\coordinate (qc) at (3,4);
-	\coordinate (kc) at (6,4);
-	\coordinate (k) at (9,2);
-	\coordinate (kd) at (6,0);
-	\coordinate (zd) at (3,0);
+	\coordinate (qc) at (4,4);
+	\coordinate (kc) at (8,4);
+        \coordinate (kck) at (12,4);
+	\coordinate (k) at (12,2);
+        \coordinate (kkd) at (12,0);
+	\coordinate (kd) at (8,0);
+	\coordinate (zd) at (4,0);
 	\coordinate (z) at (0,0);
 
-	\node[above] at (q) {Quelle};
-	\node[above] at (qc) {Quellcodierung};
-	\node[above] at (kc) {Kanalcodierung};
-	\node[right] at (k) {Kanal};
-	\node[below] at (kd) {Kanaldecodierung};
-	\node[below] at (zd) {Zieldecodierung};
-	\node[below] at (z) {Ziel};
+	\node at (q) {Quelle};
 
-	\filldraw (q) circle [radius=2pt];
+        \node at (qc) {Quellcodierung};
+        \node[below=15pt] at (qc) {\tiny Beseitigen von Redundanz, Anpassen an Kanal};
+
+        \node at (kc) {Kanalcodierung};
+        \node[below=15pt] at (kc) {\tiny kontrolliertes Hinzufügen von Redundanz,
+        $c:A^k \rightarrow A^n$};
+
+        \node at (k) {Kanal};
+        \node[below=5pt] at (k) {\tiny fehlerbehaftet};
+
+        \node at (kd) {Kanaldecodierung};
+        \node[below=5pt] at (kd) {\tiny $D: A^n \rightarrow \coding$};
+
+	\node at (zd) {Zieldecodierung};
+
+	\node at (z) {Ziel};
+
+	%\filldraw (q) circle [radius=2pt];
+        \draw[->,shorten >=1.5cm,shorten <=1.5cm] (q) -- (qc);
+	%\filldraw (qc) circle [radius=2pt];
+        \draw[->,shorten >=1.5cm,shorten <=1.5cm] (qc) -- node[above] {\tiny $\vect u \in A^k$} (kc);
+	%\filldraw (kc) circle [radius=2pt];
+        \draw[->,shorten >=0.5cm,shorten <=1.5cm] (kc) -- node[above right] {\tiny
+          ${\vect a}\in A^n$} (kck) -- (k);
+	%\filldraw (k) circle [radius=2pt];
+        \draw[->,shorten >=1.6cm,shorten <=0.5cm] (k) -- (kkd) -- node[below right] {\tiny
+          ${\vect b}\in A^n$} (kd);
+	%\filldraw (kd) circle [radius=2pt];
+          \draw[->,shorten >=1.5cm,shorten <=1.6cm] (kd) -- node[above=0.5cm] {\tiny $\hat{\vect u} =
+            c'(\hat{\vect a}) \leftarrow \hat{\vect
+            a}\in
+          \coding$} (zd);
+	%\filldraw (zd) circle [radius=2pt];
+        \draw[->,shorten >=1.5cm,shorten <=1.5cm] (zd) -- (z);
+	%\filldraw (z) circle [radius=2pt];
+
+        \draw[thin,gray,dashed] (-0.7,3.5) -- (5.4,3.5) -- (5.4,4.5) -- (-0.7,4.5) --
+        (-0.7,3.5);
+        \draw[thin,gray,dashed] (-0.7,-0.5) -- (5.4,-0.5) -- (5.4,0.5) -- (-0.7,0.5) --
+        (-0.7,-0.5);
+        \draw[thin,->,gray,dashed,shorten >=0.6cm,shorten <=0.6cm] (q) -- (z);
 	\end{tikzpicture}
 	\end{center}
 	\end{figure}
 \end{definition}
+
+\begin{minipage}[t]{0.5\textwidth}\raggedright
+  \begin{itemize}
+     \item channel alphabet $A$, $\left|A\right| = q$ 
+    \item  source ($A^k$, uniform distribution) 
+      \item  $d$: metric on $A^k$: $d({\vect a}, {\vect b}) = \#j(a_j\neq b_j)$ 
+      \item  coding: $c:A^k \rightarrow A^n$ injective\\
+       Code: $\mathcal C = \left\{ c({\vect a}) \mid {\vect a}\in A^k \right\}
+          \subseteq A^n$ 
+          \item  channel: stochastic matrix $(p({\vect b}\mid{\vect a}))_{ {\vect a},{\vect
+            b}\in A^n }$ 
+      \item  decoding: $D:A^n \rightarrow \coding = c[A^k]$ \\
+      $D_{ml}$: maximum likelihood, 
+      $D_{map}$: maximum a posteriori,
+      $D_{nc}$: nearest codeword
+    \item rate of a code: $\frac{k}{n}=\frac{1}{n}\log_q \vert\coding\vert$
+    \item minimum distance of \coding: $d_{\min}(\coding) = \underset{\vect a,\vect
+      b\in\coding,\vect a \neq\vect b}{\min}(\vect a,\vect b)$
+  \end{itemize}
+\end{minipage}\hfill\noindent
+\begin{minipage}[t]{0.5\textwidth}\raggedright
+\begin{itemize}
+  \item $A$ is a group or finite field
+
+  \item $d({\vect a}, {\vect b}) = d({\vect a}-{\vect b}, {\vect 0}) = \|{\vect a} - {\vect
+    b}\|$, $\|\vect a\| = \#j(a_j \neq 0)$
+  \item $c$ linear between vectorspaces $A^k\rightarrow A^n$\\
+   $\mathcal C\subseteq A^n$ subspace of dimention $k$
+  \item channel memoryless: $p\left( {\vect b}\mid{\vect a} \right) =
+        \prod\limits_{j=1}^n p\left( b_j | a_j \right)$\\
+      channel additive: $p\left( {\vect b}\mid{\vect a} \right) = p( \underbrace{{\vect
+        b}-{\vect a}}_{\text{error vector}}\mid {\vect 0} )$
+  $p({\vect b}\mid{\vect a}) = \prod\limits_{j=1}^n p_{err}(b_j - a_j)$\\
+  $p_{err}$: error probability distribution on $A$ 
+  $p_{err}(e) = p\left( \vect e \mid \vect 0 \right)$
+  \item $k = \dim \coding$
+  \item if \coding is linear: $d_{\min}(\coding) = \underset{\vect a \in \coding, \vect a \neq
+    \vect 0}{\min} \Vert
+    \vect a \Vert$ minimum weight
+\end{itemize}
+\end{minipage}
+
+Notation:
+
+\coding is $(n, k, d)$-Code over $q$-ary alphabet: $\coding\subseteq A^n$,
+$k=\vert\coding\vert$, $d$: minimum distance.
+
+\coding is $\left[ n,k,d \right]$-Code: \coding is linear, $\coding\subseteq A^n$ as a linear
+subspace, $k=\dim\coding$, $d$: minimum weight.
 \end{document}
